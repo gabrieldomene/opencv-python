@@ -34,13 +34,11 @@ while(cap.isOpened()):
     if (value_blur % 2 == 0):
         value_blur += 1
 
-    blur = cv2.GaussianBlur(gray_frame, (15, 15), 0)
+    blur = cv2.GaussianBlur(gray_frame, (35, 35), 0)
     retval, thresh = cv2.threshold(blur, 22, 255, 1)
 
-    # Circulo da íris
-    
-    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
+    # Circulo da íris    
+    # contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
      # Get the moments
     # mu = [None]*len(contours)
@@ -80,7 +78,9 @@ while(cap.isOpened()):
 
     #             cv2.drawContours(small, contours, -1, (0, 255, 0), 2)
 
-    all_circ = cv2.HoughCircles(thresh, cv2.HOUGH_GRADIENT, 1, 50, param1=70, param2=15, minRadius=20, maxRadius=80)
+    all_circ = cv2.HoughCircles(blur, cv2.HOUGH_GRADIENT, 1, 200, param1=20, param2=40, minRadius=20, maxRadius=80)
+    # all_circ = cv2.HoughCircles(blur, cv2.HOUGH_GRADIENT, 1.2, 300, param1=20, param2=62, minRadius=20, maxRadius=80)
+    
     # cv2.line(small, (0, w), (0, 0), (255, 255, 255), 1)
 
     # cv2.line(small,(0,int(h/2)), (int(w), int(h/2)),(255,0,0),5)
@@ -98,31 +98,31 @@ while(cap.isOpened()):
             cv2.circle(small,(i[0],i[1]),2,(0,0,255),3)
 
             cx, cy, r = np.uint16(np.around(all_circ[0][0]))
-            print('X={}' .format(new_w))
-            print('Y={}' .format(new_h))
-            print('CX={}'.format(cx))
-            print('CY={}\n'.format(cy))
+            # print('X={}' .format(new_w))
+            # print('Y={}' .format(new_h))
+            # print('CX={}'.format(cx))
+            # print('CY={}\n'.format(cy))
 
             cv2.putText(small, str(cx)+' '+str(cy),(50, 50) ,font, 1, (0, 0, 255), 2, cv2.LINE_AA)
             # cv2.putText(small, str(new_w)+' '+str(new_h),(50, 150) ,font, 1, (0, 0, 255), 2, cv2.LINE_AA)
             if((cx < int(new_w)) and (cy < int(new_h/4))):
                 # Está olhando direita cima
-                cv2.putText(small,'<-- CIMA!',(cx+70,cy+70), font, 1, (0,255,0), 2, cv2.LINE_AA)
+                cv2.putText(small,'RIGHT UP!',(cx+70,cy+70), font, 1, (0,255,0), 2, cv2.LINE_AA)
             elif((cx > int(new_w)) and (cy < int(new_h/4))):
                 # Está olhando Esquerda cima
-                cv2.putText(small,'--> CIMA!',(cx+70,cy+70), font, 1, (0,255,0), 2, cv2.LINE_AA)
+                cv2.putText(small,'LEFT UP!',(cx+70,cy+70), font, 1, (0,255,0), 2, cv2.LINE_AA)
             elif((cx < int(new_w)) and (cy > int(new_h/4))):
                 # Está olhando direita baixo
-                cv2.putText(small,'<-- BAIXO!',(cx+70,cy+70), font, 1, (0,255,0), 2, cv2.LINE_AA)
+                cv2.putText(small,'RIGHT DOWN!',(cx+70,cy+70), font, 1, (0,255,0), 2, cv2.LINE_AA)
             elif((cx > int(new_w)) and (cy > int(new_h/4))):
                 # Está olhando esquerda baixo
-                cv2.putText(small,'--> BAIXO!',(cx+70,cy+70), font, 1, (0,255, 0), 2, cv2.LINE_AA)
+                cv2.putText(small,'LEFT DOWN!',(cx+70,cy+70), font, 1, (0,255, 0), 2, cv2.LINE_AA)
                 
     cv2.imshow('Original', small)
     # cv2.imshow('Thresh', thresh)
     # cv2.imshow('Blur', blur)
     
-    k = cv2.waitKey(1) & 0xFF
+    k = cv2.waitKey(15) & 0xFF
     if k == 27:
         break
 

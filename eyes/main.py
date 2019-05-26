@@ -122,7 +122,7 @@ while(cap.isOpened()):
     # cv2.imshow('Thresh', thresh)
     # cv2.imshow('Blur', blur)
     
-    k = cv2.waitKey(20) & 0xFF
+    k = cv2.waitKey(30) & 0xFF
     if k == 27:
         break
 
